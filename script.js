@@ -438,7 +438,7 @@ function setupSlider(parent, u, min, max, stb, bts){
 
   const slideIn = function(){box.val(stb(slider.val()))}
 
-  slider.on('input', slideIn).on('mouseup', u);
+  slider.on('input', slideIn).on('mouseup', u).on('touchend', u);
   box.on('focus', function(){box.val('')}).on('blur', up).on('input', function(){slider.val(bts(clamp(box.val(), min, max)))}).on('keyup', function(event){if(event.keyCode==13){up()}});
 }
 

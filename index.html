@@ -1,5 +1,3 @@
- 
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -51,12 +49,8 @@
         </div>
       </div>
     </div>
+    <div id="loading-page"><image src="images/pc.png"></div>
     <div class="main">
-    <div id="loading-page" style="display: block">
-      <div class="loading-wrapper">
-        <image src="images/pc.png">
-      </div>
-    </div>
     <div id="CPU" class="tabcontent">
       <div class="left-side-main">
         <div class="filteredList">
@@ -152,14 +146,14 @@
           <div class="graph-viewport">
             <div id="GPUgraphs" class="two-graphs">
               <div class="graph-inner-wrapper">
-                <div class="graph-title">Modern GPU Price/Performance</div>
+                <div class="graph-title">Price/Performance</div>
                 <div id="GPUgraph" class="graph"></div>
                 <div class="y-axis-label">Price ($)</div>
                 <div class="x-axis-label">Benchmark (From <a href="https://www.passmark.com">Passmark</a>)</div>
               </div>
               <div class="graph-spacer"></div>
               <div class="graph-inner-wrapper">
-                <div class="graph-title">GPU Value/Time</div>
+                <div class="graph-title">Value/Time</div>
                 <div id="GPUtimegraph" class="graph"></div>
                 <div class="y-axis-label">Value</div>
                 <div class="x-axis-label">Age (years)</div>
@@ -246,14 +240,14 @@
           <div class="graph-viewport">
             <div id="Drivegraphs" class="two-graphs">
               <div class="graph-inner-wrapper">
-                <div class="graph-title">Drive Price/GB</div>
+                <div class="graph-title">Price/GB</div>
                 <div id="Drivegraph" class="graph"></div>
                 <div class="y-axis-label">Price ($)</div>
                 <div class="x-axis-label">Size (GB)</div>
               </div>
               <div class="graph-spacer"></div>
               <div class="graph-inner-wrapper">
-                <div class="graph-title">Drive Value/Time</div>
+                <div class="graph-title">Value/Time</div>
                 <div id="Drivetimegraph" class="graph"></div>
                 <div class="y-axis-label">Value</div>
                 <div class="x-axis-label">Age (years)</div>
@@ -333,14 +327,14 @@
         <div class="graph-viewport">
           <div id="GPUgraphs" class="two-graphs">
             <div class="graph-inner-wrapper">
-              <div class="graph-title">RAM Price/Performance</div>
+              <div class="graph-title">Price/Performance</div>
               <div id="RAMgraph" class="graph"></div>
               <div class="y-axis-label">Price ($)</div>
               <div class="x-axis-label">Size (GB)</div>
             </div>
             <div class="graph-spacer"></div>
             <div class="graph-inner-wrapper">
-              <div class="graph-title">RAM Value/Time</div>
+              <div class="graph-title">Value/Time</div>
               <div id="RAMtimegraph" class="graph"></div>
               <div class="y-axis-label">Value</div>
               <div class="x-axis-label">Age (years)</div>
@@ -412,7 +406,7 @@
           <div class="graph-viewport">
             <div class="two-graphs">
             <div class="graph-inner-wrapper">
-              <div class="graph-title">MOBO Value/Time</div>
+              <div class="graph-title">Value/Time</div>
               <div id="MOBOtimegraph" class="graph"></div>
               <div class="y-axis-label">Value</div>
               <div class="x-axis-label">Age (Years)</div>
@@ -496,14 +490,14 @@
           <div class="graph-viewport">
             <div id="PSUgraphs" class="two-graphs">
               <div class="graph-inner-wrapper">
-                <div class="graph-title">PSU Price/Wattage</div>
+                <div class="graph-title">Price/Wattage</div>
                 <div id="PSUgraph" class="graph"></div>
                 <div class="y-axis-label">Price ($)</div>
                 <div class="x-axis-label">Wattage</div>
               </div>
               <div class="graph-spacer"></div>
               <div class="graph-inner-wrapper">
-                <div class="graph-title">RAM Value/Time</div>
+                <div class="graph-title">Value/Time</div>
                 <div id="PSUtimegraph" class="graph"></div>
                 <div class="y-axis-label">Value</div>
                 <div class="x-axis-label">Age (years)</div>
@@ -656,12 +650,16 @@
       <div class="share-button-wrapper">
         <button id="share-button">Copy Share Link</button>
       </div>
-      <div>     
-      </div>
+    </div>
+    </div>
     </div>
     <div class="footer">
       <div>Contact Us: devs@pcpricer.net</div>
       <div style="font-size: 9px; color: #999; padding-top: 3px;">© 2020 Kieran McNulty and Leo Janzen</div>
+      <div style="font-size: 9px; color: #999; padding-top: 3px;">
+      Graphs courtesy of <a href='https://www.desmos.com'>Desmos</a>,
+      Icons courtesy of <a href='https://icons8.com'>Icons8</a>
+      </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://www.desmos.com/api/v1.5/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
