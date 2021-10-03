@@ -1,0 +1,8 @@
+#toggle-system:hover span {
+  padding-right: 25px;
+}
+
+#toggle-system:hover span:after {
+  opacity: 1;
+  right: 0;
+}

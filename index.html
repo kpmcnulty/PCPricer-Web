@@ -1,0 +1,671 @@
+ 
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PCPricer | Used PC Price Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8" />
+    <meta name="description" content="Estimate the price of used computers, gaming PCs, and computer parts." />
+    <meta name="keywords" content="pc price calculator, pcpricer, used, pc, price, calculator, gaming pc, gaming computer, computer, value, estimate, estimation, appraise, worth, cpu, processor, gpu, video card, graphics card, apu, motherboard, mobo, drive, hard drive, hdd, ssd, nvme, m.2, ram, ddr2, ddr3, ddr4, ddr5, case, psu, power supply, gaming"
+      />
+    <meta name="robots" content="index, follow" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="icon" type="image/png" href="images/TitleLogo.png" />
+    <link rel="stylesheet" id="toggle-system-stylesheet" href="toggle-system-collapsed.css">
+    <base target="_blank">
+  </head>
+  <body>
+    <div class="title">
+      <img src="images/logo.png" height=100%></img>
+      <button onclick="openPage('About', null, tabcolor)">See How it Works</button>
+    </div>
+    <div class="tablink-container">
+      <div class="tablink-inner">
+        <div class="tablink" onclick="openPage('CPU', this, tabcolor)">
+          <div>CPU</div>
+          <img src="images/icons8-processor-64.png">
+        </div>
+        <div class="tablink" onclick="openPage('GPU', this, tabcolor)">
+          <div>GPU</div>
+          <img src="images/icons8-video-card-64.png">
+        </div>
+        <div class="tablink" onclick="openPage('Drive', this, tabcolor)">
+          <div>Drive</div>
+          <img src="images/icons8-hdd-64.png">
+        </div>
+        <div class="tablink" onclick="openPage('RAM', this, tabcolor)">
+          <div>RAM</div>
+          <img src="images/icons8-memory-slot-64.png">
+        </div>
+        <div class="tablink" onclick="openPage('MOBO', this, tabcolor)">
+          <div>MOBO</div>
+          <img src="images/icons8-motherboard-64.png">
+        </div>
+        <div class="tablink" onclick="openPage('PSU', this, tabcolor)">
+          <div>PSU</div>
+          <img src="images/icons8-electrical-64.png">
+        </div>
+        <div class="tablink" onclick="openPage('Case', this, tabcolor)">
+          <div>Case</div>
+          <img src="images/icons8-server-64.png">
+        </div>
+      </div>
+    </div>
+    <div class="main">
+    <div id="loading-page" style="display: block">
+      <div class="loading-wrapper">
+        <image src="images/pc.png">
+      </div>
+    </div>
+    <div id="CPU" class="tabcontent">
+      <div class="left-side-main">
+        <div class="filteredList">
+          <input style="float: left" class="componentSearch" type="text" id="CPUinput" onfocus="showList(this.parentElement)" onblur="hideList(this.parentElement)" onkeyup="filter('CPUinput','CPUlist')" placeholder="Search for your CPU" title="Search"/>
+          <nav>
+            <ul class="componentList" id="CPUlist"></ul>
+          </nav>
+        </div>
+        <div style="float: left;" class="popup flpopup" onmouseover="openPop(this)" onmouseout="closePop(this)">?
+          <span class="popuptext">Search for a CPU to view its price.</span>
+        </div>
+        <div id="CPUdata" class="details">
+          <div class="name"><span></span></div>
+          <div class="price">Estimated Price: <span></span></div>
+          <button id="addcpu" class="addButton">Add to Build</button>
+          <button onClick="ebayLink(this)">Check on ebay</button>
+        </div>
+      </div>
+      <div class="right-side-main">
+        <div class="graph-outer-wrapper">
+          <div class="graph-swap-wrapper">
+            <button id="cpuslideright" class="graph-swap">
+              <image class="graph-swap-image" src="images/right-arrow.png"></image>
+            </button>
+          </div>
+          <div class="graph-viewport">
+            <div id="CPUgraphs" class="two-graphs">
+              <div class="graph-inner-wrapper">
+                <div class="graph-title">Price/Performance</div>
+                <div id="CPUgraph" class="graph"></div>
+                <div class="y-axis-label">Price ($)</div>
+                <div class="x-axis-label">Benchmark (From <a href="https://www.passmark.com">Passmark</a>)</div>
+              </div>
+              <div class="graph-spacer"></div>
+              <div class="graph-inner-wrapper">
+                <div class="graph-title">Value/Time</div>
+                <div id="CPUtimegraph" class="graph"></div>
+                <div class="y-axis-label">Value</div>
+                <div class="x-axis-label">Age (years)</div>
+              </div>
+            </div>
+          </div>
+          <div class="graph-swap-wrapper graph-swap-wrapper-right">
+            <button id="cpuslideleft" class="graph-swap">
+              <image class="graph-swap-image" src="images/left-arrow.png"></image>
+            </button>
+          </div>
+        </div>
+        <div id="CPUproduct" class="product">
+          <span id="test" style="color: orange;">
+            <div class="identifier">Price if New</div>
+            <div class="value">--</div>
+          </span>
+          • 
+          <span>
+            <div class="identifier">Time Decay</div>
+            <div class="value">--</div>
+          </span>
+          = 
+          <span style="font-weight: bold;">
+            <div class="identifier">Price</div>
+            <div class="value">$--</div>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div id="GPU" class="tabcontent">
+      <div class="left-side-main">
+        <div class="filteredList">
+          <input class="componentSearch" type="text" id="GPUinput" onkeyup="filter('GPUinput','GPUlist')" 
+            onfocus="showList(this.parentElement)" onblur="hideList(this.parentElement)" placeholder="Search for your GPU" title="Search" />
+          <nav>
+            <ul class="componentList" id="GPUlist"></ul>
+          </nav>
+        </div>
+        <div style="float: right;" class="popup flpopup" onmouseover="openPop(this)" onmouseout="closePop(this)">?
+          <span class="popuptext">Search for a GPU to view its price.</span>
+        </div>
+        <div id="GPUdata" class="details">
+          <div class="name"><span></span></div>
+          <div class="price">Estimated Price: <span></span></div>
+          <button id="addgpu" class="addButton">Add to build</button>
+          <button onClick="ebayLink(this)">Check on ebay</button>
+        </div>
+      </div>
+      <div class="right-side-main">
+        <div class="graph-outer-wrapper">
+          <div class="graph-swap-wrapper">
+            <button class="graph-swap">
+              <image class="graph-swap-image" src="images/right-arrow.png"></image>
+            </button>
+          </div>
+          <div class="graph-viewport">
+            <div id="GPUgraphs" class="two-graphs">
+              <div class="graph-inner-wrapper">
+                <div class="graph-title">Modern GPU Price/Performance</div>
+                <div id="GPUgraph" class="graph"></div>
+                <div class="y-axis-label">Price ($)</div>
+                <div class="x-axis-label">Benchmark (From <a href="https://www.passmark.com">Passmark</a>)</div>
+              </div>
+              <div class="graph-spacer"></div>
+              <div class="graph-inner-wrapper">
+                <div class="graph-title">GPU Value/Time</div>
+                <div id="GPUtimegraph" class="graph"></div>
+                <div class="y-axis-label">Value</div>
+                <div class="x-axis-label">Age (years)</div>
+              </div>
+            </div>
+          </div>
+          <div class="graph-swap-wrapper graph-swap-wrapper-right">
+            <button class="graph-swap">
+              <image class="graph-swap-image" src="images/left-arrow.png"></image>
+            </button>
+          </div>
+        </div>
+        <div id="GPUproduct" class="product" style="display: inline-block;">
+          <span id="test" style="color: orange;">
+            <div class="identifier">Price if New</div>
+            <div class="value">--</div>
+          </span>
+          • 
+          <span>
+            <div class="identifier">Time Decay</div>
+            <div class="value">--</div>
+          </span>
+          = 
+          <span style="font-weight: bold;">
+            <div class="identifier">Price</div>
+            <div class="value">$--</div>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div id="Drive" class="tabcontent">
+      <div class="left-side-main">
+        <div class="left-side-upper">
+          <div class="select-wrapper">
+            <div class="select-title">Type:</div>
+            <select id="driveTypeSelect" onchange="drive.update()">
+              <option value="0">HDD</option>
+              <option value="1">SSD</option>
+            </select>
+          </div>
+          <div class="select-wrapper" id="drivesizewrapper">
+            <div class="select-title">Size:</div>
+            <div class="slide-wrapper">
+              <div class="slidecontainer">
+                <input type="range" min="0" max="80" value="45" class="slider" id="drivesizeslider">
+              </div>
+              <div class="slide-value-wrapper">
+                <input id="drivesizebox" type="number" min="50" max="16000" class="slide-value" onfocus="clearInput(this)"/>
+                <div style="float: left">GB</div>
+              </div>
+            </div>
+          </div>
+          <div class="select-wrapper" id="driveagewrapper">
+            <div class="select-title">Age:</div>
+            <div class="slide-wrapper">
+              <div class="slidecontainer">
+                <input type="range" min="0" max="25" value="0" class="slider" style="width: 65%" id="driveageslider">
+                <div style="float: right; padding-top: 1px;" class="popup" onmouseover="openPop(this)" onmouseout="closePop(this)">?
+                  <span class="popuptext">Enter the age of your component, or check the box if you don't know. This will use the age of your CPU.</span>
+                </div>
+                <input disabled type="checkbox" class="checkbox" oninput="drive.update()" title="Same age as CPU">
+              </div>
+              <div class="slide-value-wrapper">
+                <input id="driveagebox" type="number" min="0" max="25" class="slide-value" onfocus="clearInput(this)"/>
+                <div style="float: left">years</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="drivedata" class="details">
+          <div class="name"><span></span></div>
+          <div class="price">Estimated Price: <span></span></div>
+          <button id="adddrive" class="addButton">Add to Build</button>
+          <button onClick="ebayLink(this, true)">Check on ebay</button>
+        </div>
+      </div>
+      <div class="right-side-main">
+        <div class="graph-outer-wrapper">
+          <div class="graph-swap-wrapper">
+            <button class="graph-swap">
+              <image class="graph-swap-image" src="images/right-arrow.png"></image>
+            </button>
+          </div>
+          <div class="graph-viewport">
+            <div id="Drivegraphs" class="two-graphs">
+              <div class="graph-inner-wrapper">
+                <div class="graph-title">Drive Price/GB</div>
+                <div id="Drivegraph" class="graph"></div>
+                <div class="y-axis-label">Price ($)</div>
+                <div class="x-axis-label">Size (GB)</div>
+              </div>
+              <div class="graph-spacer"></div>
+              <div class="graph-inner-wrapper">
+                <div class="graph-title">Drive Value/Time</div>
+                <div id="Drivetimegraph" class="graph"></div>
+                <div class="y-axis-label">Value</div>
+                <div class="x-axis-label">Age (years)</div>
+              </div>
+            </div>
+          </div>
+          <div class="graph-swap-wrapper" style="position: relative; right: 25px;">
+            <button class="graph-swap">
+              <image class="graph-swap-image" src="images/left-arrow.png"></image>
+            </button>
+          </div>
+        </div>
+        <div id="Driveproduct" class="product" style="display: inline-block;">
+          <span id="test" style="color: orange;">
+            <div class="identifier">Price if New</div>
+            <div class="value">--</div>
+          </span>
+          • 
+          <span>
+            <div class="identifier">Time Decay</div>
+            <div class="value">--</div>
+          </span>
+          = 
+          <span style="font-weight: bold;">
+            <div class="identifier">Price</div>
+            <div class="value">$--</div>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div id="RAM" class="tabcontent">
+    <div class="left-side-main">
+      <div class="left-side-upper">
+        <div class="select-wrapper" id="ramsizewrapper">
+          <div class="select-title">Size:</div>
+          <div class="slide-wrapper">
+            <div class="slidecontainer">
+              <input type="range" min="0" max="8" value="3" class="slider" id="ramsizeslider">
+            </div>
+            <div class="slide-value-wrapper">
+              <input id="ramsizebox" type="number" min="1" max="256" class="slide-value" onfocus="clearInput(this)"/>
+              <div style="float: left">GB</div>
+            </div>
+          </div>
+        </div>
+        <div class="select-wrapper" id="ramagewrapper">
+          <div class="select-title">Age:</div>
+          <div class="slide-wrapper">
+            <div class="slidecontainer">
+              <input disabled="false" type="range" min="0" max="25" value="0" class="slider" style="width: 65%" id="ramageslider">
+              <div style="float: right; padding-top: 1px;" class="popup" onmouseover="openPop(this)" onmouseout="closePop(this)">?
+                <span class="popuptext">Enter the age of your component, or check the box if you don't know. This will use the age of your CPU.</span>
+              </div>
+              <input disabled type="checkbox" class="checkbox" oninput="RAM.update()" title="Same age as CPU">
+            </div>
+            <div class="slide-value-wrapper">
+              <input id="ramagebox" type="number" min="0" max="25" class="slide-value" onfocus="clearInput(this)"/>
+              <div style="float: left">years</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="RAMdata" class="details">
+        <div class="name"><span></span></div>
+        <div class="price">Estimated Price: <span></span></div>
+        <button id="addram" class="addButton">Add to build</button>
+        <button onClick="ebayLink(this, true)">Check on ebay</button>
+      </div>
+    </div>
+    <div class="right-side-main">
+      <div class="graph-outer-wrapper">
+        <div class="graph-swap-wrapper">
+          <button class="graph-swap">
+            <image class="graph-swap-image" src="images/right-arrow.png"></image>
+          </button>
+        </div>
+        <div class="graph-viewport">
+          <div id="GPUgraphs" class="two-graphs">
+            <div class="graph-inner-wrapper">
+              <div class="graph-title">RAM Price/Performance</div>
+              <div id="RAMgraph" class="graph"></div>
+              <div class="y-axis-label">Price ($)</div>
+              <div class="x-axis-label">Size (GB)</div>
+            </div>
+            <div class="graph-spacer"></div>
+            <div class="graph-inner-wrapper">
+              <div class="graph-title">RAM Value/Time</div>
+              <div id="RAMtimegraph" class="graph"></div>
+              <div class="y-axis-label">Value</div>
+              <div class="x-axis-label">Age (years)</div>
+            </div>
+          </div>
+        </div>
+        <div class="graph-swap-wrapper" style="position: relative; right: 25px;">
+          <button class="graph-swap">
+            <image class="graph-swap-image" src="images/left-arrow.png"></image>
+          </button>
+        </div>
+      </div>
+      <div id="RAMproduct" class="product" style="display: inline-block;">
+        <span id="test" style="color: orange;">
+          <div class="identifier">Price if New</div>
+          <div class="value">--</div>
+        </span>
+        • 
+        <span>
+          <div class="identifier">Time Decay</div>
+          <div class="value">--</div>
+        </span>
+        = 
+        <span style="font-weight: bold;">
+          <div class="identifier">Price</div>
+          <div class="value">$--</div>
+        </span>
+      </div>
+    </div>
+    </div>
+    <div id="MOBO" class="tabcontent">
+      <div class="left-side-main">
+        <div class="left-side-upper">
+          <div class="select-wrapper">
+            <div class="select-title">Quality:</div>
+            <select id="MOBOqualityselect" onchange="MOBO.update()">
+              <option style="display: none" selected disabled value="-1">--</option>
+              <option value="0">Budget</option>
+              <option value="1">Mid-range</option>
+              <option value="2">High-end</option>
+            </select>
+          </div>
+          <div class="select-wrapper">
+            <div class="select-title">Age:</div>
+            <div class="slide-wrapper" id="moboagewrapper">
+              <div class="slidecontainer">
+                <input disabled="false" type="range" min="0" max="25" value="0" class="slider" style="width: 65%" id="moboageslider">
+                <div style="float: right; padding-top: 1px;" class="popup" onmouseover="openPop(this)" onmouseout="closePop(this)">?
+                  <span class="popuptext">Enter the age of your component, or check the box if you don't know. This will use the age of your CPU.</span>
+                </div>
+                <input disabled type="checkbox" class="checkbox" oninput="MOBO.update()" title="Same age as CPU">
+              </div>
+              <div class="slide-value-wrapper">
+                <input id="moboagebox" type="number" min="0" max="25" class="slide-value" onfocus="clearInput(this)"/>
+                <div style="float: left">years</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="MOBOdata" class="details">
+          <div class="name"><span></span></div>
+          <div class="price">Estimated Price: <span></span></div>
+          <button id="addmobo" class="addButton">Add to build</button>
+          <button onClick="ebayLink(this, true)">Check on ebay</button>
+        </div>
+      </div>
+      <div class="right-side-main">
+        <div class="graph-outer-wrapper">
+          <div class="graph-viewport">
+            <div class="two-graphs">
+            <div class="graph-inner-wrapper">
+              <div class="graph-title">MOBO Value/Time</div>
+              <div id="MOBOtimegraph" class="graph"></div>
+              <div class="y-axis-label">Value</div>
+              <div class="x-axis-label">Age (Years)</div>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div id="MOBOproduct" class="product" style="display: inline-block;">
+          <span id="test" style="color: orange;">
+            <div class="identifier">Price if New</div>
+            <div class="value">--</div>
+          </span>
+          • 
+          <span>
+            <div class="identifier">Time Decay</div>
+            <div class="value">--</div>
+          </span>
+          = 
+          <span style="font-weight: bold;">
+            <div class="identifier">Price</div>
+            <div class="value">$--</div>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div id="PSU" class="tabcontent">
+      <div class="left-side-main">
+        <div class="left-side-upper">
+          <div class="select-wrapper">
+            <div class="select-title">80+ Rating:</div>
+            <select id="ratingselect" onchange="PSU.update()">
+              <option style="display: none" selected disabled value="-1">--</option>
+              <option value="0">Unrated/Bronze</option>
+              <option value="1">Silver/Gold</option>
+              <option value="2">Platinum/Titanium</option>
+            </select>
+          </div>
+          <div class="select-wrapper">
+            <div class="select-title">Wattage:</div>
+            <div class="slide-wrapper" id="psuwattagewrapper">
+              <div class="slidecontainer">
+                <input type="range" min="0" max="25" value="0" class="slider" id="psuwattageslider">
+              </div>
+              <div class="slide-value-wrapper">
+                <input id="psuwattagebox" type="number" min="5" max="30" class="slide-value" onfocus="clearInput(this)"/>
+                <div style="float: left">W</div>
+              </div>
+            </div>
+          </div>
+          <div class="select-wrapper" id="psuagewrapper">
+            <div class="select-title">Age:</div>
+            <div class="slide-wrapper">
+              <div class="slidecontainer">
+                <input type="range" min="0" max="25" value="0" class="slider" style="width: 65%" id="psuageslider">
+                <div style="float: right; padding-top: 1px;" class="popup" onmouseover="openPop(this)" onmouseout="closePop(this)">?
+                  <span class="popuptext">Enter the age of your component, or check the box if you don't know. This will use the age of your CPU.</span>
+                </div>
+                <input disabled type="checkbox" class="checkbox" oninput="PSU.update()" title="Same age as CPU">
+              </div>
+              <div class="slide-value-wrapper">
+                <input id="psuagebox" type="number" min="0" max="25" class="slide-value" onfocus="clearInput(this)"/>
+                <div style="float: left">years</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="PSUdata" class="details">
+          <div class="name"><span></span></div>
+          <div class="price">Estimated Price: <span></span></div>
+          <button id="addpsu" class="addButton">Add to build</button>
+          <button onClick="ebayLink(this, true)">Check on ebay</button>
+        </div>
+      </div>
+      <div class="right-side-main">
+        <div class="graph-outer-wrapper">
+          <div class="graph-swap-wrapper">
+            <button class="graph-swap">
+              <image class="graph-swap-image" src="images/right-arrow.png"></image>
+            </button>
+          </div>
+          <div class="graph-viewport">
+            <div id="PSUgraphs" class="two-graphs">
+              <div class="graph-inner-wrapper">
+                <div class="graph-title">PSU Price/Wattage</div>
+                <div id="PSUgraph" class="graph"></div>
+                <div class="y-axis-label">Price ($)</div>
+                <div class="x-axis-label">Wattage</div>
+              </div>
+              <div class="graph-spacer"></div>
+              <div class="graph-inner-wrapper">
+                <div class="graph-title">RAM Value/Time</div>
+                <div id="PSUtimegraph" class="graph"></div>
+                <div class="y-axis-label">Value</div>
+                <div class="x-axis-label">Age (years)</div>
+              </div>
+            </div>
+          </div>
+          <div class="graph-swap-wrapper" style="position: relative; right: 25px;">
+            <button class="graph-swap">
+              <image class="graph-swap-image" src="images/left-arrow.png"></image>
+            </button>
+          </div>
+        </div>
+        <div id="PSUproduct" class="product" style="display: inline-block;">
+          <span id="test" style="color: orange;">
+            <div class="identifier">Price if New</div>
+            <div class="value">--</div>
+          </span>
+          • 
+          <span>
+            <div class="identifier">Time Decay</div>
+            <div class="value">--</div>
+          </span>
+          = 
+          <span style="font-weight: bold;">
+            <div class="identifier">Price</div>
+            <div class="value">$--</div>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div id="Case" class="tabcontent">
+      <div class="left-side-main">
+        <div class="left-side-upper">
+          <div class="select-wrapper">
+            <div class="select-title">Quality:</div>
+            <select id="casequalityselect" onchange="CASE.update()">
+              <option style="display: none" selected disabled value="-1">--</option>
+              <option value="0">Budget</option>
+              <option value="1">Mid-Range</option>
+              <option value="2">High-end</option>
+            </select>
+          </div>
+        </div>
+        <div id="casedata" class="details">
+          <div class="name"><span></span></div>
+          <div class="price">Estimated Price: <span></span></div>
+          <button id="addcase" class="addButton">Add to build</button>
+          <button onClick="ebayLink(this)">Check on ebay</button>
+        </div>
+      </div>
+    </div>
+    <div id="About" class="tabcontent" style="height: auto;">
+      <h1 style="margin-top: 50px;">What is PCPricer?</h1>
+      <p>Accurate prices for older computer components are often hard to find. When prices for older components are taken from online retailers, their value is often vastly overestimated. This tool estimates the objective value of used computer components using the method below.</p>
+      <div id="flowchart-container">
+      <div id="flowchart-wrapper">
+        <img src="images/Flowchart1.png" class="infographic">
+        <img src="images/Flowchart2.png" class="infographic">
+        <img src="images/Flowchart3.png" class="infographic">
+        <img src="images/Flowchart4.png" class="infographic">
+        <button onclick="openTab(0)">Get Started</button>
+      </div>
+      </div>
+      
+    </div>
+    <div id="sidebar-wrapper">
+    <button id='toggle-system' style="vertical-align:middle" onclick='toggleSystem(this)'><span>System </span></button>
+    <div id="sidebar">
+      <div class="category-title">CPU:</div>
+      <div url="0" class="component" id="buildCPU">
+        <button class="buildButton" onclick="openTab(0)">
+          <div class="name">None Selected</div>
+          <div value="0" class="price"></div>
+        </button>
+        <button class="removeButton" onClick="remove(this.parentElement)">
+          <image src="images/x.png">
+        </button>
+      </div>
+      <div class="category-title">GPU:</div>
+      <div url="0" class="component" id="buildGPU">
+        <button class="buildButton" onclick="openTab(1)">
+          <div class="name">None Selected</div>
+          <div value="0" class="price"></div>
+        </button>
+        <button class="removeButton" onClick="remove(this.parentElement)">
+          <image src="images/x.png">
+        </button>
+      </div>
+      <div class="category-title">Drives:</div>
+      <div id="buildDrive" class="sideWrap">
+        <div url="0" class="component">
+          <button class="buildButton" onclick="openTab(2)">
+            <div class="name">None Selected</div>
+            <div value="0" class="price"></div>
+          </button>
+          <button class="removeButton" onClick="remove(this.parentElement, drive)">
+            <image src="images/x.png">
+          </button>
+        </div>
+      </div>
+      <div class="category-title">RAM:</div>
+      <div id="buildRAM" class="sideWrap">
+        <div url="0" class="component">
+          <button class="buildButton" onclick="openTab(3)">
+            <div class="name">None Selected</div>
+            <div value="0" class="price"></div>
+          </button>
+          <button class="removeButton" onClick="remove(this.parentElement, RAM)">
+            <image src="images/x.png">
+          </button>
+        </div>
+      </div>
+      <div class="category-title">MOBO:</div>
+      <div url="0" class="component" id="buildMOBO">
+        <button class="buildButton" onclick="openTab(4)">
+          <div class="name">None Selected</div>
+          <div value="0" class="price"></div>
+        </button>
+        <button class="removeButton" onClick="remove(this.parentElement)">
+          <image src="images/x.png">
+        </button>
+      </div>
+      <div class="category-title">PSU:</div>
+      <div url="0" class="component" id="buildPSU">
+        <button class="buildButton" onclick="openTab(5)">
+          <div class="name">None Selected</div>
+          <div value="0" class="price"></div>
+        </button>
+        <button class="removeButton" onClick="remove(this.parentElement)">
+          <image src="images/x.png">
+        </button>
+      </div>
+      <div class="category-title">Case:</div>
+      <div url="0" class="component" id="buildCase">
+        <button class="buildButton" onclick="openTab(6)">
+          <div class="name">None Selected</div>
+          <div value="0" class="price"></div>
+        </button>
+        <button class="removeButton" onClick="remove(this.parentElement);">
+          <image src="images/x.png">
+        </button>
+      </div>
+      <div class="total">
+        <div class="name">Total:</div>
+        <div class="popup" onmouseover="openPop(this)" onmouseout="closePop(this)">?
+          <span class="popuptext">Total value of the added parts above. Adjust as needed to account for the overall condition of your system.</span>
+        </div>
+        <div class="price" id="buildTotal">$0</div>
+      </div>
+      <div class="share-button-wrapper">
+        <button id="share-button">Copy Share Link</button>
+      </div>
+      <div>     
+      </div>
+    </div>
+    <div class="footer">
+      <div>Contact Us: devs@pcpricer.net</div>
+      <div style="font-size: 9px; color: #999; padding-top: 3px;">© 2020 Kieran McNulty and Leo Janzen</div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://www.desmos.com/api/v1.5/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
+
