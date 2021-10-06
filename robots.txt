@@ -16,5 +16,3 @@ Allow: /
 
 User-agent: Googlebot
 Allow: /
-
-Sitemap: https://www.example.com/sitemap.xml
