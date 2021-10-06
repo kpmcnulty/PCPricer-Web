@@ -1,0 +1,20 @@
+User-agent: *
+Disallow: /comments/feed/
+Disallow: /archives/
+Disallow: /preview/
+Disallow: /profiles/
+Disallow: /search
+
+User-agent: Mediapartners-Google* 
+Allow: /
+
+User-agent: Googlebot-Mobile
+Allow: /
+
+User-agent: Adsbot-Google
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+Sitemap: https://www.example.com/sitemap.xml
