@@ -118,8 +118,9 @@ $(document).ready(async function () {
   setupGraphSwaps(drive);
   setupGraphSwaps(PSU);
 
-	$('#loading-page').hide();
-  $('#About').show();
+  $('#loading-page').hide();
+  openTab(0);
+  //$('#About').show();
 	
 });
 
