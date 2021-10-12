@@ -39,6 +39,7 @@ $(document).ready(async function () {
   cpuparams = [{a: params.intel_a, b: params.intel_b, c: params.intel_c, d: params.intel_d, label: 'Intel', color: Desmos.Colors.BLUE}, {a: params.amd_a, b: params.amd_b, c: params.amd_c, d: params.amd_d, label: 'AMD', color: Desmos.Colors.RED}];
 
   cputimeparams = {w: params.cpu_decay, label: ' ', color: Desmos.Colors.BLACK};
+  ramtimeparams = {w: −15568446, label: ' ', color: Desmos.Colors.BLACK};
 
   gpuparams = {a: params.gpu_a, b: params.gpu_b, c: params.gpu_c, d: params.gpu_d, label: ' ', color: Desmos.Colors.PURPLE};
 
@@ -64,7 +65,7 @@ $(document).ready(async function () {
 	$('#share-button').click(function () { copyToClipboard("https://www.pcpricer.net" + getUrlParams()) } );
 
   RAMgraph = newGraph('RAMgraph', 40, 150, ramparams, linearString);
-  RAMtimegraph = newGraph('RAMtimegraph', 25, 1, cputimeparams, decayString);
+  RAMtimegraph = newGraph('RAMtimegraph', 25, 1, ramtimeparams, decayString);
   Drivegraph = newGraph('Drivegraph', 2000, 50, driveparams);
   CPUgraph = newGraph('CPUgraph', 25000, 1200, cpuparams, polyString);
   CPUtimegraph = newGraph('CPUtimegraph', 25, 1, cputimeparams, decayString);
@@ -239,13 +240,13 @@ RAM = {
 
   updateGraphs: function(p) {
     var c = showPoint(RAMgraph, p[1], linear, ramparams);
-    var w = showPoint(RAMtimegraph, p[0], decay, cputimeparams);
+    var w = showPoint(RAMtimegraph, p[0], decay, ramtimeparams);
     
     updateProduct('#RAMproduct', c, w)
   },
 
   getNamePrice: function(p){
-    return {name: p[1] + 'GB ' + "RAM" + prettyAge(p[0]), price:  linear(p[1], ramparams).toFixed(2) * decay(p[0], cputimeparams)}
+    return {name: p[1] + 'GB ' + "RAM" + prettyAge(p[0]), price:  linear(p[1], ramparams).toFixed(2) * decay(p[0], ramtimeparams)}
   },
 
   el: '#RAM',
