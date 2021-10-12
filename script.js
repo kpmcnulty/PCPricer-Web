@@ -39,7 +39,7 @@ $(document).ready(async function () {
   cpuparams = [{a: params.intel_a, b: params.intel_b, c: params.intel_c, d: params.intel_d, label: 'Intel', color: Desmos.Colors.BLUE}, {a: params.amd_a, b: params.amd_b, c: params.amd_c, d: params.amd_d, label: 'AMD', color: Desmos.Colors.RED}];
 
   cputimeparams = {w: params.cpu_decay, label: ' ', color: Desmos.Colors.BLACK};
-  ramtimeparams = {w: −15568446, label: ' ', color: Desmos.Colors.BLACK};
+  ramtimeparams = {w: -15568446, label: ' ', color: Desmos.Colors.BLACK};
 
   gpuparams = {a: params.gpu_a, b: params.gpu_b, c: params.gpu_c, d: params.gpu_d, label: ' ', color: Desmos.Colors.PURPLE};
 
