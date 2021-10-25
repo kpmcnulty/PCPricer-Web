@@ -507,6 +507,14 @@ button.graph-swap {
   padding: 5px;
 }
 
+.footer a{
+  color: inherit;
+}
+
+.footer a:visited{
+  color: inherit;
+}
+
 .popup {
   position: relative;
   user-select: none;
