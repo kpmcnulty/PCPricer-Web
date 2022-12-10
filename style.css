@@ -491,6 +491,12 @@ button.graph-swap {
 .product span {
   display: inline-block;
   width: 60px;
+  cursor: pointer;
+}
+
+.result {
+  font-weight: bold;
+  cursor: default !important;
 }
 
 .product .identifier {

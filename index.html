@@ -110,7 +110,7 @@
           </div>
         </div>
         <div id="CPUproduct" class="product">
-          <span id="test" style="color: orange;">
+          <span style="color: orange;">
             <div class="identifier">Price if New</div>
             <div class="value">--</div>
           </span>
@@ -120,7 +120,7 @@
             <div class="value">--</div>
           </span>
           = 
-          <span style="font-weight: bold;">
+          <span class="result">
             <div class="identifier">Price</div>
             <div class="value">$--</div>
           </span>
@@ -177,7 +177,7 @@
           </div>
         </div>
         <div id="GPUproduct" class="product" style="display: inline-block;">
-          <span id="test" style="color: orange;">
+          <span style="color: orange;">
             <div class="identifier">Price if New</div>
             <div class="value">--</div>
           </span>
@@ -187,7 +187,7 @@
             <div class="value">--</div>
           </span>
           = 
-          <span style="font-weight: bold;">
+          <span class="result">
             <div class="identifier">Price</div>
             <div class="value">$--</div>
           </span>
@@ -199,7 +199,7 @@
         <div class="left-side-upper">
           <div class="select-wrapper">
             <div class="select-title">Type:</div>
-            <select id="driveTypeSelect" onchange="drive.update()">
+            <select id="driveTypeSelect" onchange="drive.update(); slide(drive, false)">
               <option value="0">HDD</option>
               <option value="1">SSD</option>
             </select>
@@ -271,7 +271,7 @@
           </div>
         </div>
         <div id="Driveproduct" class="product" style="display: inline-block;">
-          <span id="test" style="color: orange;">
+          <span style="color: orange;">
             <div class="identifier">Price if New</div>
             <div class="value">--</div>
           </span>
@@ -281,7 +281,7 @@
             <div class="value">--</div>
           </span>
           = 
-          <span style="font-weight: bold;">
+          <span class="result">
             <div class="identifier">Price</div>
             <div class="value">$--</div>
           </span>
@@ -358,7 +358,7 @@
         </div>
       </div>
       <div id="RAMproduct" class="product" style="display: inline-block;">
-        <span id="test" style="color: orange;">
+        <span style="color: orange;">
           <div class="identifier">Price if New</div>
           <div class="value">--</div>
         </span>
@@ -368,7 +368,7 @@
           <div class="value">--</div>
         </span>
         = 
-        <span style="font-weight: bold;">
+        <span class="result">
           <div class="identifier">Price</div>
           <div class="value">$--</div>
         </span>
@@ -380,12 +380,28 @@
         <div class="left-side-upper">
           <div class="select-wrapper">
             <div class="select-title">Quality:</div>
-            <select id="MOBOqualityselect" onchange="MOBO.update()">
+            <select id="MOBOqualityselect" onchange="MOBO.update(); slide(MOBO, false)">
               <option style="display: none" selected disabled value="-1">--</option>
               <option value="0">Budget</option>
               <option value="1">Mid-range</option>
               <option value="2">High-end</option>
             </select>
+          </div>
+          <div class="select-wrapper">
+            <div class="select-title">CPU Price:</div>
+            <div class="slide-wrapper" id="moboCpuPriceWrapper">
+              <div class="slidecontainer">
+                <input disabled="false" type="range" min="0" max="63" value="0" class="slider" style="width: 65%" id="moboageslider">
+                <div style="float: right; padding-top: 1px;" class="popup" onmouseover="openPop(this)" onmouseout="closePop(this)">?
+                  <span class="popuptext">Check the box to use the price of the CPU you have selected in the CPU tab.</span>
+                </div>
+                <input disabled type="checkbox" class="checkbox" oninput="MOBO.update()" title="Use selected CPU price">
+              </div>
+              <div class="slide-value-wrapper">
+                <div style="float: left">$</div>
+                <input id="moboCpuPriceBox" type="number" min="0" max="10000" class="slide-value" onfocus="clearInput(this)"/>
+              </div>
+            </div>
           </div>
           <div class="select-wrapper">
             <div class="select-title">Age:</div>
@@ -413,19 +429,36 @@
       </div>
       <div class="right-side-main">
         <div class="graph-outer-wrapper">
+          <div class="graph-swap-wrapper">
+            <button class="graph-swap">
+              <image class="graph-swap-image" src="images/right-arrow.png"></image>
+            </button>
+          </div>
           <div class="graph-viewport">
             <div class="two-graphs">
-            <div class="graph-inner-wrapper">
-              <div class="graph-title">Value/Time</div>
-              <div id="MOBOtimegraph" class="graph"></div>
-              <div class="y-axis-label">Value</div>
-              <div class="x-axis-label">Age (Years)</div>
+              <div class="graph-inner-wrapper">
+                <div class="graph-title">MOBO Price/CPU Price</div>
+                <div id="MOBOgraph" class="graph"></div>
+                <div class="y-axis-label">MOBO Price ($)</div>
+                <div class="x-axis-label">CPU Price($)</div>
+              </div>
+              <div class="graph-spacer"></div>
+              <div class="graph-inner-wrapper">
+                <div class="graph-title">Value/Time</div>
+                <div id="MOBOtimegraph" class="graph"></div>
+                <div class="y-axis-label">Value</div>
+                <div class="x-axis-label">Age (Years)</div>
+              </div>
             </div>
-            </div>
+          </div>
+          <div class="graph-swap-wrapper" style="position: relative; right: 25px;">
+            <button class="graph-swap">
+              <image class="graph-swap-image" src="images/left-arrow.png"></image>
+            </button>
           </div>
         </div>
         <div id="MOBOproduct" class="product" style="display: inline-block;">
-          <span id="test" style="color: orange;">
+          <span style="color: orange;">
             <div class="identifier">Price if New</div>
             <div class="value">--</div>
           </span>
@@ -435,7 +468,7 @@
             <div class="value">--</div>
           </span>
           = 
-          <span style="font-weight: bold;">
+          <span class="result">
             <div class="identifier">Price</div>
             <div class="value">$--</div>
           </span>
@@ -447,7 +480,7 @@
         <div class="left-side-upper">
           <div class="select-wrapper">
             <div class="select-title">80+ Rating:</div>
-            <select id="ratingselect" onchange="PSU.update()">
+            <select id="ratingselect" onchange="PSU.update(); slide(PSU, false)">
               <option style="display: none" selected disabled value="-1">--</option>
               <option value="0">Unrated/Bronze</option>
               <option value="1">Silver/Gold</option>
@@ -521,7 +554,7 @@
           </div>
         </div>
         <div id="PSUproduct" class="product" style="display: inline-block;">
-          <span id="test" style="color: orange;">
+          <span style="color: orange;">
             <div class="identifier">Price if New</div>
             <div class="value">--</div>
           </span>
@@ -531,7 +564,7 @@
             <div class="value">--</div>
           </span>
           = 
-          <span style="font-weight: bold;">
+          <span class="result">
             <div class="identifier">Price</div>
             <div class="value">$--</div>
           </span>
