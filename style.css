@@ -791,6 +791,11 @@ button.graph-swap {
   #About {
     padding: 10px 10px 10px 10px;
   }
- 
+  #ad-banner {
+    width: 100%;
+    height: auto;
+    text-align: center;
+    padding: 10px 0;
+    box-sizing:
 }
 
