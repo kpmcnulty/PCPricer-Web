@@ -82,7 +82,7 @@ $(document).ready(async function() {
   $('.checkbox').prop('disabled', true);
   $('.slider').prop('disabled', false);
 
-  $('#share-button').click(function() { copyToClipboard("https://www.pcpricer.net" + getUrlParams()) });
+  $('#share-button').click(function() { copyToClipboard("https://pcpricer.net" + getUrlParams()) });
 
   RAMgraph = newGraph('RAMgraph', 40, 150, ramparams, linearString);
   RAMtimegraph = newGraph('RAMtimegraph', 25, 1, ramtimeparams, decayString);
