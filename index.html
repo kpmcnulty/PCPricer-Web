@@ -45,17 +45,9 @@
           <div>RAM</div>
           <img src="images/icons8-memory-slot-64.png">
         </div>
-        <div class="tablink" onclick="openPage('MOBO', this, tabcolor)">
-          <div>MOBO</div>
-          <img src="images/icons8-motherboard-64.png">
-        </div>
         <div class="tablink" onclick="openPage('PSU', this, tabcolor)">
           <div>PSU</div>
           <img src="images/icons8-electrical-64.png">
-        </div>
-        <div class="tablink" onclick="openPage('Case', this, tabcolor)">
-          <div>Case</div>
-          <img src="images/icons8-server-64.png">
         </div>
       </div>
     </div>
@@ -77,6 +69,7 @@
           <div class="price">Estimated Price: <span></span></div>
           <button id="addcpu" class="addButton">Add to Build</button>
           <button onClick="ebayLink(this)">Check on ebay</button>
+          <div class="affiliate-note">As an eBay Partner, PCPricer may earn a commission if you buy through this link.</div>
         </div>
       </div>
       <div class="right-side-main">
@@ -142,8 +135,11 @@
         <div id="GPUdata" class="details">
           <div class="name"><span></span></div>
           <div class="price">Estimated Price: <span></span></div>
+          <div class="price-note">Prices are based on gaming performance. NVIDIA cards with lots of VRAM
+            (e.g. RTX 3090, 4090, 5090) often sell for much more because of demand for AI use.</div>
           <button id="addgpu" class="addButton">Add to build</button>
           <button onClick="ebayLink(this)">Check on ebay</button>
+          <div class="affiliate-note">As an eBay Partner, PCPricer may earn a commission if you buy through this link.</div>
         </div>
       </div>
       <div class="right-side-main">
@@ -238,6 +234,7 @@
           <div class="price">Estimated Price: <span></span></div>
           <button id="adddrive" class="addButton">Add to Build</button>
           <button onClick="ebayLink(this, true)">Check on ebay</button>
+          <div class="affiliate-note">As an eBay Partner, PCPricer may earn a commission if you buy through this link.</div>
         </div>
       </div>
       <div class="right-side-main">
@@ -291,6 +288,13 @@
     <div id="RAM" class="tabcontent">
     <div class="left-side-main">
       <div class="left-side-upper">
+        <div class="select-wrapper">
+          <div class="select-title">Type:</div>
+          <select id="ramTypeSelect" onchange="RAM.update(); slide(RAM, false)">
+            <option value="ddr4">DDR4</option>
+            <option value="ddr5">DDR5</option>
+          </select>
+        </div>
         <div class="select-wrapper" id="ramsizewrapper">
           <div class="select-title">Size:</div>
           <div class="slide-wrapper">
@@ -303,28 +307,13 @@
             </div>
           </div>
         </div>
-        <div class="select-wrapper" id="ramagewrapper">
-          <div class="select-title">Age:</div>
-          <div class="slide-wrapper">
-            <div class="slidecontainer">
-              <input disabled="false" type="range" min="0" max="25" value="0" class="slider" style="width: 65%" id="ramageslider">
-              <div style="float: right; padding-top: 1px;" class="popup" onmouseover="openPop(this)" onmouseout="closePop(this)">?
-                <span class="popuptext">Enter the age of your component, or check the box if you don't know. This will use the age of your CPU.</span>
-              </div>
-              <input disabled type="checkbox" class="checkbox" oninput="RAM.update()" title="Same age as CPU">
-            </div>
-            <div class="slide-value-wrapper">
-              <input id="ramagebox" type="number" min="0" max="25" class="slide-value" onfocus="clearInput(this)"/>
-              <div style="float: left">years</div>
-            </div>
-          </div>
-        </div>
       </div>
       <div id="RAMdata" class="details">
         <div class="name"><span></span></div>
         <div class="price">Estimated Price: <span></span></div>
         <button id="addram" class="addButton">Add to build</button>
-        <button onClick="ebayLink(this, true)">Check on ebay</button>
+        <button onClick="ebayLink(this)">Check on ebay</button>
+        <div class="affiliate-note">As an eBay Partner, PCPricer may earn a commission if you buy through this link.</div>
       </div>
     </div>
     <div class="right-side-main">
@@ -335,7 +324,7 @@
           </button>
         </div>
         <div class="graph-viewport">
-          <div id="GPUgraphs" class="two-graphs">
+          <div id="RAMgraphs" class="two-graphs">
             <div class="graph-inner-wrapper">
               <div class="graph-title">Price/Performance</div>
               <div id="RAMgraph" class="graph"></div>
@@ -375,106 +364,6 @@
       </div>
     </div>
     </div>
-    <div id="MOBO" class="tabcontent">
-      <div class="left-side-main">
-        <div class="left-side-upper">
-          <div class="select-wrapper">
-            <div class="select-title">Quality:</div>
-            <select id="MOBOqualityselect" onchange="MOBO.update(); slide(MOBO, false)">
-              <option style="display: none" selected disabled value="-1">--</option>
-              <option value="0">Budget</option>
-              <option value="1">Mid-range</option>
-              <option value="2">High-end</option>
-            </select>
-          </div>
-          <div class="select-wrapper">
-            <div class="select-title">CPU Price:</div>
-            <div class="slide-wrapper" id="moboCpuPriceWrapper">
-              <div class="slidecontainer">
-                <input disabled="false" type="range" min="0" max="63" value="0" class="slider" style="width: 65%" id="moboageslider">
-                <div style="float: right; padding-top: 1px;" class="popup" onmouseover="openPop(this)" onmouseout="closePop(this)">?
-                  <span class="popuptext">Check the box to use the price of the CPU you have selected in the CPU tab.</span>
-                </div>
-                <input disabled type="checkbox" class="checkbox" oninput="MOBO.update()" title="Use selected CPU price">
-              </div>
-              <div class="slide-value-wrapper">
-                <div style="float: left">$</div>
-                <input id="moboCpuPriceBox" type="number" min="0" max="10000" class="slide-value" onfocus="clearInput(this)"/>
-              </div>
-            </div>
-          </div>
-          <div class="select-wrapper">
-            <div class="select-title">Age:</div>
-            <div class="slide-wrapper" id="moboagewrapper">
-              <div class="slidecontainer">
-                <input disabled="false" type="range" min="0" max="25" value="0" class="slider" style="width: 65%" id="moboageslider">
-                <div style="float: right; padding-top: 1px;" class="popup" onmouseover="openPop(this)" onmouseout="closePop(this)">?
-                  <span class="popuptext">Enter the age of your component, or check the box if you don't know. This will use the age of your CPU.</span>
-                </div>
-                <input disabled type="checkbox" class="checkbox" oninput="MOBO.update()" title="Same age as CPU">
-              </div>
-              <div class="slide-value-wrapper">
-                <input id="moboagebox" type="number" min="0" max="25" class="slide-value" onfocus="clearInput(this)"/>
-                <div style="float: left">years</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div id="MOBOdata" class="details">
-          <div class="name"><span></span></div>
-          <div class="price">Estimated Price: <span></span></div>
-          <button id="addmobo" class="addButton">Add to build</button>
-          <button onClick="ebayLink(this, true)">Check on ebay</button>
-        </div>
-      </div>
-      <div class="right-side-main">
-        <div class="graph-outer-wrapper">
-          <div class="graph-swap-wrapper">
-            <button class="graph-swap">
-              <image class="graph-swap-image" src="images/right-arrow.png"></image>
-            </button>
-          </div>
-          <div class="graph-viewport">
-            <div class="two-graphs">
-              <div class="graph-inner-wrapper">
-                <div class="graph-title">MOBO Price/CPU Price</div>
-                <div id="MOBOgraph" class="graph"></div>
-                <div class="y-axis-label">MOBO Price ($)</div>
-                <div class="x-axis-label">CPU Price($)</div>
-              </div>
-              <div class="graph-spacer"></div>
-              <div class="graph-inner-wrapper">
-                <div class="graph-title">Value/Time</div>
-                <div id="MOBOtimegraph" class="graph"></div>
-                <div class="y-axis-label">Value</div>
-                <div class="x-axis-label">Age (Years)</div>
-              </div>
-            </div>
-          </div>
-          <div class="graph-swap-wrapper" style="position: relative; right: 25px;">
-            <button class="graph-swap">
-              <image class="graph-swap-image" src="images/left-arrow.png"></image>
-            </button>
-          </div>
-        </div>
-        <div id="MOBOproduct" class="product" style="display: inline-block;">
-          <span style="color: orange;">
-            <div class="identifier">Price if New</div>
-            <div class="value">--</div>
-          </span>
-          • 
-          <span>
-            <div class="identifier">Time Decay</div>
-            <div class="value">--</div>
-          </span>
-          = 
-          <span class="result">
-            <div class="identifier">Price</div>
-            <div class="value">$--</div>
-          </span>
-        </div>
-      </div>
-    </div>
     <div id="PSU" class="tabcontent">
       <div class="left-side-main">
         <div class="left-side-upper">
@@ -499,28 +388,13 @@
               </div>
             </div>
           </div>
-          <div class="select-wrapper" id="psuagewrapper">
-            <div class="select-title">Age:</div>
-            <div class="slide-wrapper">
-              <div class="slidecontainer">
-                <input type="range" min="0" max="25" value="0" class="slider" style="width: 65%" id="psuageslider">
-                <div style="float: right; padding-top: 1px;" class="popup" onmouseover="openPop(this)" onmouseout="closePop(this)">?
-                  <span class="popuptext">Enter the age of your component, or check the box if you don't know. This will use the age of your CPU.</span>
-                </div>
-                <input disabled type="checkbox" class="checkbox" oninput="PSU.update()" title="Same age as CPU">
-              </div>
-              <div class="slide-value-wrapper">
-                <input id="psuagebox" type="number" min="0" max="25" class="slide-value" onfocus="clearInput(this)"/>
-                <div style="float: left">years</div>
-              </div>
-            </div>
-          </div>
         </div>
         <div id="PSUdata" class="details">
           <div class="name"><span></span></div>
           <div class="price">Estimated Price: <span></span></div>
           <button id="addpsu" class="addButton">Add to build</button>
-          <button onClick="ebayLink(this, true)">Check on ebay</button>
+          <button onClick="ebayLink(this)">Check on ebay</button>
+          <div class="affiliate-note">As an eBay Partner, PCPricer may earn a commission if you buy through this link.</div>
         </div>
       </div>
       <div class="right-side-main">
@@ -560,7 +434,7 @@
           </span>
           • 
           <span>
-            <div class="identifier">Time Decay</div>
+            <div class="identifier">Used Value</div>
             <div class="value">--</div>
           </span>
           = 
@@ -568,27 +442,6 @@
             <div class="identifier">Price</div>
             <div class="value">$--</div>
           </span>
-        </div>
-      </div>
-    </div>
-    <div id="Case" class="tabcontent">
-      <div class="left-side-main">
-        <div class="left-side-upper">
-          <div class="select-wrapper">
-            <div class="select-title">Quality:</div>
-            <select id="casequalityselect" onchange="CASE.update()">
-              <option style="display: none" selected disabled value="-1">--</option>
-              <option value="0">Budget</option>
-              <option value="1">Mid-Range</option>
-              <option value="2">High-end</option>
-            </select>
-          </div>
-        </div>
-        <div id="casedata" class="details">
-          <div class="name"><span></span></div>
-          <div class="price">Estimated Price: <span></span></div>
-          <button id="addcase" class="addButton">Add to build</button>
-          <button onClick="ebayLink(this)">Check on ebay</button>
         </div>
       </div>
     </div>
@@ -653,33 +506,13 @@
           </button>
         </div>
       </div>
-      <div class="category-title">MOBO:</div>
-      <div url="0" class="component" id="buildMOBO">
+      <div class="category-title">PSU:</div>
+      <div url="0" class="component" id="buildPSU">
         <button class="buildButton" onclick="openTab(4)">
           <div class="name">None Selected</div>
           <div value="0" class="price"></div>
         </button>
         <button class="removeButton" onClick="remove(this.parentElement)">
-          <image src="images/x.png">
-        </button>
-      </div>
-      <div class="category-title">PSU:</div>
-      <div url="0" class="component" id="buildPSU">
-        <button class="buildButton" onclick="openTab(5)">
-          <div class="name">None Selected</div>
-          <div value="0" class="price"></div>
-        </button>
-        <button class="removeButton" onClick="remove(this.parentElement)">
-          <image src="images/x.png">
-        </button>
-      </div>
-      <div class="category-title">Case:</div>
-      <div url="0" class="component" id="buildCase">
-        <button class="buildButton" onclick="openTab(6)">
-          <div class="name">None Selected</div>
-          <div value="0" class="price"></div>
-        </button>
-        <button class="removeButton" onClick="remove(this.parentElement);">
           <image src="images/x.png">
         </button>
       </div>
@@ -709,8 +542,9 @@
     </div>
     </div>
     <div class="footer">
-      <div>Contact us: <a href="mailto:devs@pcpricer.net">devs@pcpricer.net</a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;All prices shown in USD</div>
-      <div style="font-size: 9px; color: #999; padding-top: 3px;">© 2020-2022 <a href="https://kieranmcnulty.org">Kieran McNulty</a> and Leo Janzen</div>
+      <div>Contact us: <a href="mailto:devs@pcpricer.net">devs@pcpricer.net</a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;All prices shown in USD<span id="data-updated"></span></div>
+      <div style="font-size: 9px; color: #999; padding-top: 3px;">© 2020-2026 <a href="https://kieranmcnulty.org">Kieran McNulty</a> and Leo Janzen</div>
+      <div style="font-size: 9px; color: #999; padding-top: 3px;">Disclosure: "Check on ebay" links are eBay Partner Network affiliate links. As an eBay Partner, PCPricer may earn a commission from qualifying purchases.</div>
       <div style="font-size: 9px; color: #999; padding-top: 3px;">
       Graphs courtesy of <a href='https://www.desmos.com'>Desmos</a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;Icons courtesy of <a href='https://icons8.com'>Icons8</a>
       </div>
@@ -718,11 +552,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://www.desmos.com/api/v1.5/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
     <script src="script.js"></script>
-	<script type="text/javascript">
-		var infolinks_pid = 3349460;
-		var infolinks_wsid = 0;
-	</script>
-	<script type="text/javascript" src="http://resources.infolinks.com/js/infolinks_main.js"></script>
   </body>
 </html>
 

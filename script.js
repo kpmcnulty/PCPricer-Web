@@ -13,27 +13,23 @@ $(document).ready(async function() {
     RAMs = data.ram;
     CPU.comps = data.cpu;
     GPU.comps = data.gpu;
-    HDDs = data.hdd;
-    SSDs = data.ssd;
     PSUs = data.psu;
-    MOBOs = data.mobo;
     params = data.params;
-    cases = data.cases;
     dp = data.driveparams;
+    updated = data.updated;
   });
 
-  MOBOs.quality = ["Budget", "Mid-range", "High-end"];
-  cases.quality = ["Budget", "Mid-range", "High-end"];
+  if (updated) {
+    const date = new Date(updated + 'T00:00:00');
+    $('#data-updated').text('    |    Prices updated ' +date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }));
+  }
+
   PSUs.ratings = ['Unrated/Bronze', 'Silver/Gold', 'Platinum/Titanium'];
 
-  cpuparams = [{
-    a: params.intel_a, b: params.intel_b, c: params.intel_c, d: params.intel_d,
-    label: 'Intel', color: Desmos.Colors.BLUE
-  },
-  {
-    a: params.amd_a, b: params.amd_b, c: params.amd_c, d: params.amd_d,
-    label: 'AMD', color: Desmos.Colors.RED
-  }];
+  cpuparams = {
+    a: params.cpu_a, b: params.cpu_b, c: params.cpu_c, d: params.cpu_d,
+    label: ' ', color: Desmos.Colors.BLUE
+  };
   cputimeparams = { w: params.cpu_decay, label: ' ', color: Desmos.Colors.BLACK };
 
   gpuparams = {
@@ -50,20 +46,18 @@ $(document).ready(async function() {
     a: dp.ssd_a, b: dp.ssd_b, c: dp.ssd_c, d: dp.ssd_d,
     color: Desmos.Colors.PURPLE, label: ' SSD', func: ypoly, strFunc: ypolyString
   }];
-  drivetimeparams = { w: -9417949, label: ' ', color: Desmos.Colors.BLACK };
+  drivetimeparams = [{ w: dp.hdd_decay, label: ' HDD', color: Desmos.Colors.ORANGE },
+  { w: dp.ssd_decay, label: ' SSD', color: Desmos.Colors.PURPLE }];
 
-  ramparams = { a: RAMs.ddr4_a, b: RAMs.ddr4_b, label: 'DDR4', color: Desmos.Colors.RED };
-  ramtimeparams = { w: -9417949, label: ' ', color: Desmos.Colors.BLACK };
+  ramparams = [{ a: RAMs.ddr4_a, b: RAMs.ddr4_b, label: 'DDR4', color: Desmos.Colors.RED },
+  { a: RAMs.ddr5_a, b: RAMs.ddr5_b, label: 'DDR5', color: Desmos.Colors.BLUE }];
+  ramtimeparams = { w: RAMs.decay, label: ' ', color: Desmos.Colors.BLACK };
 
   psuparams = [{ a: PSUs.low_a, b: PSUs.low_b, c: PSUs.low_c, label: 'Unrated/Bronze', color: '#b87333', },
   { a: PSUs.mid_a, b: PSUs.mid_b, c: PSUs.mid_c, label: 'Silver/Gold', color: '#d4af37' },
   { a: PSUs.high_a, b: PSUs.high_b, c: PSUs.high_c, label: 'Platinum/Titanium', color: '#b4b2a7' }];
-  psutimeparams = { w: -12300994, label: ' ', color: Desmos.Colors.BLACK };
+  psutimeparams = { w: PSUs.decay, factor: PSUs.used_factor, label: ' ', color: Desmos.Colors.BLACK };
 
-  moboparams = [{ p: MOBOs.prices[0], k: MOBOs.k, label: 'Budget', color: '#b87333' },
-  { p: MOBOs.prices[1], k: MOBOs.k, label: 'Mid-range', color: '#b4b2a7' },
-  { p: MOBOs.prices[2], k: MOBOs.k, label: 'High-end', color: '#d4af37' }]
-  mobotimeparams = { w: -12300994, label: ' ', color: Desmos.Colors.BLACK };
 
   fillLists(GPU);
   fillLists(CPU);
@@ -94,10 +88,16 @@ $(document).ready(async function() {
   PSUgraph = newGraph('PSUgraph', 1500, 300, psuparams, lnString);
   Drivetimegraph = newGraph('Drivetimegraph', 25, 1, drivetimeparams, decayString);
   PSUtimegraph = newGraph('PSUtimegraph', 25, 1, psutimeparams, decayString);
-  MOBOgraph = newGraph('MOBOgraph', 1000, 200, moboparams, moboPriceString);
-  MOBOtimegraph = newGraph('MOBOtimegraph', 25, 1, mobotimeparams, decayString);
 
   urlParams = new URLSearchParams(window.location.search);
+
+  // Old share links can include parts the site no longer prices; drop them from the address bar.
+  if (urlParams.has('mobo') || urlParams.has('case')) {
+    urlParams.delete('mobo');
+    urlParams.delete('case');
+    const query = urlParams.toString();
+    history.replaceState(null, '', location.pathname + (query ? '?' + query : '') + location.hash);
+  }
 
   for (const c of compObjects) {
     if (urlParams.has(c.name)) {
@@ -113,14 +113,10 @@ $(document).ready(async function() {
     }
   }
 
-  setupSlider('#ramagewrapper', RAM.update, 0, 25, null, null, RAM, true);
   setupSlider('#ramsizewrapper', RAM.update, 1, 256, function(val) { return Math.pow(2, val) }, Math.log2, RAM, false);
-  setupSlider('#moboagewrapper', MOBO.update, 0, 25, null, null, MOBO, true);
-  setupSlider('#moboCpuPriceWrapper', MOBO.update, 0, 10000, getCpuPrice, getCpuPriceInverse, MOBO, false)
   setupSlider('#drivesizewrapper', drive.update, 50, 16000, getDriveSize, getDriveSizeInverse, drive, false);
   setupSlider('#psuwattagewrapper', PSU.update, 250, 1500, function(val) { return 50 * val + 250 }, function(val) { return (val - 250) / 50 }, PSU, false);
   setupSlider('#driveagewrapper', drive.update, 0, 25, null, null, drive, true);
-  setupSlider('#psuagewrapper', PSU.update, 0, 25, null, null, PSU, true);
 
   $('.slider').trigger('input');
 
@@ -130,8 +126,6 @@ $(document).ready(async function() {
   RAM.update();
   drive.update();
   PSU.update();
-  MOBO.update();
-  CASE.update();
 
   total();
 
@@ -140,7 +134,6 @@ $(document).ready(async function() {
   setupGraphSwaps(RAM);
   setupGraphSwaps(drive);
   setupGraphSwaps(PSU);
-  setupGraphSwaps(MOBO)
 
   $('#loading-page').hide();
   openTab(0);
@@ -153,33 +146,19 @@ $(document).ready(async function() {
 CPU = {
   updateGraphs: function(id) {
     var comp = getComp(CPU, id);
-    var params = cpuparams[0];
-
-    if (comp.brand == 'AMD') {
-      params = cpuparams[1];
-    }
-
-    var p = showPoint(CPUgraph, comp.bench, poly, params);
+    var p = showPoint(CPUgraph, comp.bench, poly, cpuparams);
     var v = showPoint(CPUtimegraph, comp.age / 365, decay, cputimeparams);
 
     updateProduct("#CPUproduct", p, v);
     $('.checkbox').prop('disabled', false);
 
-    MOBO.update();
     RAM.update();
   },
 
   getNamePrice: function(id) {
     var comp = getComp(CPU, id);
-    var params = cpuparams[0];
-
-    if (comp.brand == 'AMD') {
-      params = cpuparams[1];
-    }
-
     CPUage = comp.age;
-    CPUprice = Math.round(poly(comp.bench, params) * decay(comp.age / 365, cputimeparams));
-    MOBO.update();
+    CPUprice = Math.round(poly(comp.bench, cpuparams) * decay(comp.age / 365, cputimeparams));
     RAM.update();
 
     return { price: CPUprice, name: comp.name }
@@ -229,13 +208,13 @@ drive = {   //[type, size]
   updateGraphs: function(p) {
     var d = driveparams[p[0]];
     var c = showPoint(Drivegraph, p[1], d.func, d);
-    var w = showPoint(Drivetimegraph, p[2], decay, drivetimeparams);
+    var w = showPoint(Drivetimegraph, p[2], decay, drivetimeparams[p[0]]);
     updateProduct('#Driveproduct', c, w);
   },
 
   getNamePrice: function(p) {
     var d = driveparams[p[0]];
-    return { name: prettySize(p[1]) + d.label + prettyAge(p[2]), price: d.func(p[1], d) * decay(p[2], drivetimeparams) }
+    return { name: prettySize(p[1]) + d.label + prettyAge(p[2]), price: d.func(p[1], d) * decay(p[2], drivetimeparams[p[0]]) }
   },
 
   el: '#Drive',
@@ -246,25 +225,32 @@ drive = {   //[type, size]
   right: 0
 };
 
-RAM = {
+RAM_TYPES = ['ddr4', 'ddr5'];
+
+// Share links before DDR5 was added used [age, size]; anything that isn't a type is DDR4.
+function ramType(t) {
+  return Math.max(RAM_TYPES.indexOf(t), 0);
+}
+
+RAM = {   //[type, size]
   update: function() {
     var RAMsize = $('#ramsizebox').val();
-    var RAMage = getAge('#ramagewrapper');
 
     $('#ramsizebox').val(RAMsize);
 
-    upDet(RAM, [RAMage, RAMsize]);
+    upDet(RAM, [$('#ramTypeSelect').val(), RAMsize]);
   },
 
   updateGraphs: function(p) {
-    var c = showPoint(RAMgraph, p[1], linear, ramparams);
-    var w = showPoint(RAMtimegraph, p[0], decay, ramtimeparams);
+    var c = showPoint(RAMgraph, p[1], linear, ramparams[ramType(p[0])]);
+    var w = showPoint(RAMtimegraph, 0, decay, ramtimeparams);
 
     updateProduct('#RAMproduct', c, w)
   },
 
   getNamePrice: function(p) {
-    return { name: p[1] + 'GB ' + "RAM" + prettyAge(p[0]), price: linear(p[1], ramparams).toFixed(2) * decay(p[0], ramtimeparams) }
+    var r = ramparams[ramType(p[0])];
+    return { name: p[1] + 'GB ' + r.label + ' RAM', price: linear(p[1], r) }
   },
 
   el: '#RAM',
@@ -304,52 +290,13 @@ function getValWithCheckbox(wrapper, checkedVal, inverseFunc) {
   return val;
 }
 
-MOBO = {
-  update: function() {
-    var MOBOage = getAge("#moboagewrapper");
-    var MOBOquality = $('#MOBOqualityselect').val();
-    var MoboCPUprice = getValWithCheckbox("#moboCpuPriceWrapper", CPUprice, getCpuPriceInverse)
-
-
-    if (MOBOquality != null) {
-      var q = showPoint(MOBOtimegraph, MOBOage, decay, mobotimeparams);
-      var v = showPoint(MOBOgraph, MoboCPUprice, moboPrice, moboparams[MOBOquality]);
-      this.price = updateProduct('#MOBOproduct', v, q);
-      this.p = [MOBOquality, MOBOage, MoboCPUprice]
-      const cpu = '($' + MoboCPUprice + ' CPU, ';
-      this.n = (MOBOs.quality[MOBOquality] + ' MOBO' + prettyAge(MOBOage)).replace('(', cpu)
-
-      upDet(MOBO, this.p)
-
-    } else {
-      hideDetails('MOBOdata');
-    }
-  },
-
-  /*(updateGraphs: function(p){
-    var q = showPoint(MOBOtimegraph, p[1], decay, cputimeparams);
-    var v = showPoint(MOBOgraph, p[2], moboPrice, moboparams[p[0]]);
-  },*/
-
-  getNamePrice: function(p) {
-    const cpu = '($' + p[2] + ' CPU, ';
-    return { name: (MOBOs.quality[p[0]] + ' MOBO' + prettyAge(p[1])).replace('(', cpu), price: moboPrice(p[2], moboparams[p[0]]) * decay(p[1], mobotimeparams) }
-  },
-
-  el: '#MOBO',
-  name: 'mobo',
-};
-
-
 
 PSU = {
   update: function() {
     var i = $('#psuwattagebox').val();
     var j = $('#ratingselect').val();
-    var age = getAge('#psuagewrapper');
-
     if (j != null) {
-      upDet(PSU, [i, j, age]);
+      upDet(PSU, [i, j]);
     } else {
       hideDetails('PSUdata');
     }
@@ -357,13 +304,14 @@ PSU = {
 
   updateGraphs: function(p) {
     var c = showPoint(PSUgraph, p[0], ln, psuparams[p[1]]);
-    var w = showPoint(PSUtimegraph, p[2], decay, psutimeparams);
+    var w = showPoint(PSUtimegraph, 0, decay, psutimeparams);
 
     updateProduct('#PSUproduct', c, w);
   },
 
   getNamePrice: function(p) {
-    return { name: [" Bronze ", " Slv/Gld ", " Plt/Ttm "][p[1]] + p[0] + "W PSU" + prettyAge(p[2]), price: ln(p[0], psuparams[p[1]]) * decay(p[2], psutimeparams) }
+    // Share links before Sep 2026 had an age as p[2]; used PSUs sell for about the same at any age.
+    return { name: [" Bronze ", " Gold ", " Plt/Ttm "][p[1]] + p[0] + "W PSU", price: ln(p[0], psuparams[p[1]]) * decay(0, psutimeparams) }
   },
 
   right: 0,
@@ -371,51 +319,18 @@ PSU = {
   name: 'psu',
 };
 
-CASE = {
-  update: function() {
-    var qualityselect = document.getElementById("casequalityselect");
 
-    var i = qualityselect.value;
-
-    casequality = i;
-
-    if (i != -1) {
-
-      upDet(this, i);
-
-    } else {
-      hideDetails('casedata');
-    }
-  },
-
-  getNamePrice: function(p) {
-    return { name: cases.quality[p] + ' Case', price: cases.prices[p] }
-  },
-
-  el: '#Case',
-  name: 'case'
-};
-
-
-compObjects = [CPU, GPU, drive, RAM, MOBO, PSU, CASE];
+compObjects = [CPU, GPU, drive, RAM, PSU];
 
 
 //setup functions: 
 
+// The search lists hold thousands of parts, so only matches are rendered (see filter).
+const MAX_SEARCH_RESULTS = 100;
+
 function fillLists(obj) {
-  const list = $(obj.el).find('ul');
-
-  for (i = 0; i < obj.comps.length; i++) {
-    entry = document.createElement("li");
-    btt = document.createElement("button");
-
-    const idp = obj.comps[i].idp;
-    $(btt).click(function() { list.hide(); upDet(obj, idp) }).text(obj.comps[i].name);
-
-    entry.appendChild(btt);
-    entry.style.display = 'none';
-
-    list.append(entry);
+  for (const comp of obj.comps) {
+    comp.searchKey = clean(comp.name);
   }
 }
 
@@ -478,7 +393,29 @@ function setupSlider(parent, u, min, max, stb, bts, graphs, leftright) {
   box.on('focus', function() { box.val('') }).on('blur', up).on('input', function() { slider.val(bts(clamp(box.val(), min, max))) }).on('keyup', function(event) { if (event.keyCode == 13) { up() } });
 }
 
+// Desmos calculators are expensive, so a graph is only created the first time its tab is
+// shown (see showGraphsIn). Until then, showPoint just records where the view should be.
+const graphs = {};
+
 function newGraph(id, domain, range, params, strFunc) {
+  const graph = {
+    id: id, params: params, strFunc: strFunc, calc: null, point: null,
+    domain: domain, targetDomain: domain, range: range, targetRange: range
+  };
+  graphs[id] = graph;
+  return graph;
+}
+
+function showGraphsIn(pageName) {
+  $('#' + pageName + ' .graph').each(function() {
+    const graph = graphs[this.id];
+    if (graph && !graph.calc) {
+      createCalculator(graph);
+    }
+  });
+}
+
+function createCalculator(graph) {
   const graphoptions = {
     expressions: expressions,
     settingsMenu: false,
@@ -489,13 +426,16 @@ function newGraph(id, domain, range, params, strFunc) {
 
   var letters = ['h', 'g', 'z', 'a', 'b', 'c']
 
-  var chart = Desmos.GraphingCalculator(document.getElementById(id), graphoptions);
+  var chart = Desmos.GraphingCalculator(document.getElementById(graph.id), graphoptions);
+  graph.calc = chart;
 
-  chart.domain = chart.targetDomain = domain;
-  chart.range = chart.targetRange = domain;
+  // Start at the latest target view rather than animating to it.
+  graph.domain = graph.targetDomain;
+  graph.range = graph.targetRange;
+  chart.setMathBounds({ left: 0, right: graph.domain, bottom: 0, top: graph.range });
 
-  chart.setMathBounds({ left: 0, right: domain, bottom: 0, top: range });
-
+  var params = graph.params;
+  var strFunc = graph.strFunc;
   var i = 0;
 
   if (!params.length) {
@@ -532,10 +472,12 @@ function newGraph(id, domain, range, params, strFunc) {
 
   chart.setExpression({
     id: 'label',
-    latex: 'p = ' + .3 * domain
+    latex: 'p = ' + .3 * graph.domain
   })
 
-  return chart
+  if (graph.point) {
+    chart.setExpression(graph.point);
+  }
 }
 
 function setupGraphSwaps(graphs) {
@@ -653,10 +595,6 @@ function total() {
   }
   var totalElement = document.getElementById("buildTotal");
   totalElement.innerHTML = "$" + totalPrice;
-
-  if (totalPrice > 1000000) {
-    window.location.href = 'death.html';
-  }
 }
 
 function getUrlParams() {
@@ -686,59 +624,66 @@ function getUrlParams() {
 
 //graph stuff
 
-function showPoint(chart, x, func, params) {
+function showPoint(graph, x, func, params) {
   var y = func(x, params);
 
-  chart.setExpression({
+  graph.point = {
     id: 'point',
     latex: '(' + x + ',' + y + ')',
     showLabel: true,
     color: params.color
-  });
+  };
 
-  pan(chart, 2 * x, 2 * y);
+  if (graph.calc) {
+    graph.calc.setExpression(graph.point);
+  }
+
+  pan(graph, 2 * x, 2 * y);
 
   return Number(y);
 }
 
-function pan(chart, x, y) {
-  chart.targetRange = clamp(y, 1, 9999999);
-  chart.targetDomain = clamp(x, 1, 9999999);
-  panGraph(chart);
+function pan(graph, x, y) {
+  graph.targetRange = clamp(y, 1, 9999999);
+  graph.targetDomain = clamp(x, 1, 9999999);
 
-  chart.updateSettings({ lockViewport: true });
+  if (graph.calc) {
+    panGraph(graph);
+    graph.calc.updateSettings({ lockViewport: true });
+  }
 }
 
-async function panGraph(chart) {
-  var rangedif = chart.targetRange - chart.range;
-  var domaindif = chart.targetDomain - chart.domain;
+async function panGraph(graph) {
+  var chart = graph.calc;
+  var rangedif = graph.targetRange - graph.range;
+  var domaindif = graph.targetDomain - graph.domain;
 
   var notdone = false;
 
-  if (Math.abs(rangedif) > Math.abs(chart.targetRange / 1000)) {
-    chart.range += rangedif / 8;
+  if (Math.abs(rangedif) > Math.abs(graph.targetRange / 1000)) {
+    graph.range += rangedif / 8;
     notdone = true;
   }
 
-  if (Math.abs(domaindif) > Math.abs(chart.targetDomain / 1000)) {
-    chart.domain += domaindif / 8;
+  if (Math.abs(domaindif) > Math.abs(graph.targetDomain / 1000)) {
+    graph.domain += domaindif / 8;
     notdone = true;
   }
 
   chart.setExpression({
     id: 'label',
-    latex: 'p = ' + .3 * chart.domain
+    latex: 'p = ' + .3 * graph.domain
   });
 
   chart.setMathBounds({
     left: 0,
-    right: chart.domain,
+    right: graph.domain,
     bottom: 0,
-    top: chart.range
+    top: graph.range
   });
 
   if (notdone) {
-    setTimeout(function() { panGraph(chart) }, 35);
+    setTimeout(function() { panGraph(graph) }, 35);
   } else {
     chart.updateSettings({ lockViewport: true });
   }
@@ -830,6 +775,12 @@ const copyToClipboard = str => {
   $('#share-button').text('Copied!');
   setTimeout(resetShareButton, 1000);
 
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(str);
+    return;
+  }
+
+  // Fallback for browsers without the async clipboard API.
   const el = document.createElement('textarea');
   el.value = str;
   el.setAttribute('readonly', '');
@@ -859,34 +810,29 @@ function openPage(pageName, elmnt, color) {
     tablinks[i].style.backgroundColor = "";
   }
   document.getElementById(pageName).style.display = "block";
-  elmnt.style.backgroundColor = color;
+  showGraphsIn(pageName);
+  if (elmnt) {
+    elmnt.style.backgroundColor = color;
+  }
 }
 
 function filter(inputId, listId) {
-  var input, filter, ul, li, a, i, txtValue;
+  const obj = listId == 'CPUlist' ? CPU : GPU;
+  const query = clean(document.getElementById(inputId).value);
+  const list = $('#' + listId).empty();
 
-  input = document.getElementById(inputId);
+  if (query == '') {
+    return;
+  }
 
-  ul = document.getElementById(listId);
-  li = ul.getElementsByTagName("li");
-
-  filter = clean(input.value);
-
-  if (filter != '') {
-
-
-    for (i = 0; i < li.length; i++) {
-      a = li[i].getElementsByTagName("button")[0];
-      txtValue = a.textContent || a.innerText;
-      if (clean(txtValue).indexOf(filter) > -1) {
-        li[i].style.display = "";
-      } else {
-        li[i].style.display = "none";
+  var shown = 0;
+  for (const comp of obj.comps) {
+    if (comp.searchKey.indexOf(query) > -1) {
+      const button = $('<button>').text(comp.name).click(function() { list.hide(); upDet(obj, comp.idp) });
+      list.append($('<li>').append(button));
+      if (++shown >= MAX_SEARCH_RESULTS) {
+        break;
       }
-    }
-  } else {
-    for (i = 0; i < li.length; i++) {
-      li[i].style.display = "none";
     }
   }
 }
@@ -942,26 +888,25 @@ function linearString(p, l) {
   return l + '(x) =' + p.a.toFixed(20) + 'x + ' + p.b.toFixed(20);
 }
 
+// Share of the new price a used part is worth: p.factor (default 1) times the age decay.
+// p.w is null for parts whose value doesn't depend on age (RAM, PSUs).
 function decayString(p, l) {
   if (!l) {
     var l = 'h';
   }
-  return l + '(x)=e^{(x*365)^2/' + p.w.toString() + '}';
+  var factor = p.factor || 1;
+  if (!p.w) {
+    return l + '(x)=' + factor;
+  }
+  return l + '(x)=' + factor + 'e^{(x*365)^2/' + p.w.toString() + '}';
 }
 
 function decay(x, p) {
-  return Math.exp(Math.pow((x * 365), 2) / p.w).toFixed(2);
-}
-
-function moboPrice(x, p) {
-  return p.p * (1 - Math.exp(-1 * p.k * x))
-}
-
-function moboPriceString(p, l) {
-  if (!l) {
-    var l = 'h';
+  var factor = p.factor || 1;
+  if (!p.w) {
+    return factor.toFixed(2);
   }
-  return l + '(x)=' + p.p.toString() + '(1 - e^{-1*x*' + p.k.toString() + '})';
+  return (factor * Math.exp(Math.pow((x * 365), 2) / p.w)).toFixed(2);
 }
 
 function showList(list) {
@@ -1006,34 +951,6 @@ function onResize() {
   }
 }
 
-function getCpuPrice(val) {
-  if (val <= 20) {
-    return 10 * val;
-  } else if (val <= 35) {
-    return 20 * (val - 10);
-  } else if (val <= 45) {
-    return 50 * (val - 25);
-  } else if (val <= 55) {
-    return 100 * (val - 35);
-  } else {
-    return 1000 * (val - 54);
-  }
-}
-
-function getCpuPriceInverse(price) {
-  if (price <= 200) {
-    return price / 10;
-  } else if (price <= 500) {
-    return price / 20 + 10;
-  } else if (price <= 1000) {
-    return price / 50 + 25;
-  } else if (price <= 2000) {
-    return price / 100 + 35;
-  } else {
-    return price / 1000 + 54;
-  }
-}
-
 function getDriveSize(val) {
   if (val <= 45) {
     return 10 * val + 50;
@@ -1064,10 +981,6 @@ function prettySize(size) {
   } else {
     return size / 1000 + 'TB';
   }
-}
-
-function hddName(speed, size) {
-  return size + "GB " + HDDs.speeds[speed] + "RPM HDD";
 }
 
 function prettyAge(age) {
