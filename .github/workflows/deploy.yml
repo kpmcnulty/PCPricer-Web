@@ -1,0 +1,48 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "scraper/**"
+      - "history/**"
+      - "README.md"
+  workflow_dispatch:
+  workflow_call:
+
+concurrency: deploy-hostinger
+
+jobs:
+  deploy:
+    # Opt-in: set the repository variable HOSTINGER_DEPLOY=true once the FTP secrets are added.
+    if: vars.HOSTINGER_DEPLOY == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }} # branch tip, so a data commit made earlier in this run is included
+
+      - name: Check FTP settings
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          for v in FTP_SERVER FTP_USERNAME FTP_PASSWORD; do
+            [ -n "${!v}" ] || { echo "::error::Secret $v is not set"; exit 1; }
+          done
+
+      - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ vars.FTP_SERVER_DIR || 'public_html/' }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            scraper/**
+            history/**
+            CNAME
+            README.md

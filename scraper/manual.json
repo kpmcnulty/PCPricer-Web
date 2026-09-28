@@ -1,0 +1,27 @@
+{
+  "mobo": {
+    "quality": [
+      "Budget",
+      "Mid-range",
+      "High-end"
+    ],
+    "prices": [
+      100,
+      180,
+      460
+    ],
+    "k": 0.0017391304347826088
+  },
+  "cases": {
+    "quality": [
+      "Budget",
+      "Mid-range",
+      "High-end"
+    ],
+    "prices": [
+      10,
+      40,
+      70
+    ]
+  }
+}
