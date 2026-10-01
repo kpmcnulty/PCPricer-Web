@@ -995,8 +995,8 @@ function ebayLink(el, hasAge) {
   }
 
 
-  var splitTerm = searchterm.replace(/ /g, '%2B');
-  var ebaylink = "https://rover.ebay.com/rover/1/711-53200-19255-0/1?ff3=4&toolid=10041&campid=5338736140&customid=&lgeo=1&mpre=http%3A%2F%2Fwww.ebay.com%2Fsch%2Fi.html%3F_nkw%3D" + splitTerm + "%26_ddo%3D1%26_ipg%3D100%26_pgn%3D1"
+  var splitTerm = encodeURIComponent(searchterm).replace(/%20/g, '+');
+  var ebaylink = "https://www.ebay.com/sch/i.html?_nkw=" + splitTerm + "&_ipg=100&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339216440&toolid=10001&mkevt=1"
 
   window.open(ebaylink, '_blank');
 }
